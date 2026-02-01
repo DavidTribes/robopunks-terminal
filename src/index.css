@@ -1,0 +1,17 @@
+/* src/index.css */
+
+/* Full-bleed app inside an iframe (Wix/Netlify/etc.) */
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;                 /* no page scroll inside iframe */
+  background: #050708;              /* deep terminal black */
+  color: #d9ffe7;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

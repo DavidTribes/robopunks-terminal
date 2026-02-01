@@ -1,0 +1,133 @@
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: #000;
+}
+
+.crt {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.terminal {
+  width: min(1000px, 95vw);
+  height: 85vh;
+  background: #020402;
+  border-radius: 16px;
+  padding: 24px;
+
+  font-family: "Courier New", monospace;
+  font-size: 18px;
+  line-height: 1.45;
+
+  border: 1px solid rgba(57, 255, 20, 0.35);
+
+  box-shadow:
+    0 0 28px rgba(57, 255, 20, 0.35),
+    0 0 60px rgba(57, 255, 20, 0.16),
+    inset 0 0 22px rgba(57, 255, 20, 0.12);
+}
+
+.outWrap {
+  height: calc(100% - 44px);
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* base line */
+.line {
+  white-space: pre-wrap;
+}
+
+/* GREEN output */
+.line.out {
+  color: #39ff14;
+  text-shadow:
+    0 0 6px rgba(57, 255, 20, 0.95),
+    0 0 14px rgba(57, 255, 20, 0.55);
+}
+
+/* BLUE command echo */
+.line.cmd {
+  color: #00eaff;
+  font-weight: 700;
+  text-shadow:
+    0 0 6px rgba(0, 234, 255, 0.95),
+    0 0 14px rgba(0, 234, 255, 0.55);
+}
+
+/* PINK headers / hints */
+.line.hdr,
+.line.hint {
+  color: #ff4fd8;
+  font-weight: 700;
+  text-shadow:
+    0 0 7px rgba(255, 79, 216, 0.95),
+    0 0 16px rgba(255, 79, 216, 0.55);
+}
+
+/* RED errors */
+.line.err {
+  color: #ff3b3b;
+  font-weight: 800;
+  text-shadow:
+    0 0 7px rgba(255, 59, 59, 0.95),
+    0 0 16px rgba(255, 59, 59, 0.55);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* prompt */
+.prompt {
+  color: #00eaff;
+  margin-right: 8px;
+  font-weight: 800;
+  text-shadow: 0 0 7px rgba(0, 234, 255, 0.95);
+}
+
+/* Command input (NO GREY BOX + SAME SIZE ALWAYS) */
+.cmdInput {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+
+  color: #00eaff;
+  font: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  font-weight: 700;
+
+  padding: 0;
+  margin: 0;
+
+  text-shadow:
+    0 0 7px rgba(0, 234, 255, 0.95),
+    0 0 16px rgba(0, 234, 255, 0.55);
+}
+
+.cmdInput::placeholder {
+  color: rgba(0, 234, 255, 0.55);
+  opacity: 1;
+}
+
+/* Scrollbar */
+.outWrap::-webkit-scrollbar { width: 7px; }
+.outWrap::-webkit-scrollbar-thumb {
+  background: rgba(57, 255, 20, 0.55);
+  border-radius: 10px;
+}
+.outWrap::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.25);
+}
