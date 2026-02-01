@@ -13,13 +13,20 @@ export default function App() {
   const [input, setInput] = useState("");
   const outRef = useRef<HTMLDivElement>(null);
 
-  // --- simple sound (safe everywhere incl. Wix) ---
+  // --- iOS/Wix-safe sound ---
+  // iPhone blocks audio until a user gesture. We "arm" it on first tap/keypress.
+  const isArmed = useRef(false);
   const clickSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    // Put these files in /public/click.mp3 and /public/error.mp3
     clickSound.current = new Audio("/click.mp3");
     errorSound.current = new Audio("/error.mp3");
+
+    // defaults
+    if (clickSound.current) clickSound.current.volume = 0.4;
+    if (errorSound.current) errorSound.current.volume = 0.5;
   }, []);
 
   useEffect(() => {
@@ -29,25 +36,56 @@ export default function App() {
     });
   }, [lines]);
 
+  function armAudio() {
+    if (isArmed.current) return;
+    isArmed.current = true;
+
+    // Prime audio playback on iOS: try a quick play/pause from a gesture.
+    const a = clickSound.current;
+    if (!a) return;
+
+    const oldVol = a.volume;
+    a.volume = 0.01;
+    a.currentTime = 0;
+
+    a.play()
+      .then(() => {
+        a.pause();
+        a.currentTime = 0;
+        a.volume = oldVol;
+      })
+      .catch(() => {
+        // If it fails here, it usually works after the next gesture.
+        a.volume = oldVol;
+      });
+  }
+
   function playClick() {
-    if (clickSound.current) {
-      clickSound.current.currentTime = 0;
-      clickSound.current.play().catch(() => {});
-    }
+    const a = clickSound.current;
+    if (!a) return;
+
+    // cloning lets rapid key clicks overlap (won't cut itself off)
+    const clone = a.cloneNode(true) as HTMLAudioElement;
+    clone.volume = a.volume;
+    clone.currentTime = 0;
+    clone.play().catch(() => {});
   }
 
   function playError() {
-    if (errorSound.current) {
-      errorSound.current.currentTime = 0;
-      errorSound.current.play().catch(() => {});
-    }
+    const a = errorSound.current;
+    if (!a) return;
+
+    const clone = a.cloneNode(true) as HTMLAudioElement;
+    clone.volume = a.volume;
+    clone.currentTime = 0;
+    clone.play().catch(() => {});
   }
 
   function runCommand(cmd: string) {
     const c = cmd.toLowerCase().trim();
 
     if (c === "help") {
-      setLines(l => [
+      setLines((l) => [
         ...l,
         "> help",
         "COMMANDS",
@@ -69,27 +107,29 @@ export default function App() {
     }
 
     if (c === "boot") {
+      playClick();
       setLines([
         "rebooting system...",
         "system initialised... OK",
         "neural cores online... OK",
+        "type 'help' for available commands.",
       ]);
       return;
     }
 
     if (c === "whoami") {
-      setLines(l => [...l, "> whoami", "you are: visitor"]);
+      setLines((l) => [...l, "> whoami", "you are: visitor"]);
       return;
     }
 
     if (["home", "about", "archives"].includes(c)) {
-      setLines(l => [...l, `> ${c}`, `navigating to ${c}...`]);
+      setLines((l) => [...l, `> ${c}`, `navigating to ${c}...`]);
       return;
     }
 
     // error
     playError();
-    setLines(l => [
+    setLines((l) => [
       ...l,
       `> ${cmd}`,
       `command not recognised: ${cmd}`,
@@ -109,7 +149,23 @@ export default function App() {
   }
 
   return (
-    <div className="crt">
+    <div
+      className="crt"
+      onPointerDown={armAudio}
+      onKeyDownCapture={armAudio}
+      tabIndex={-1}
+    >
+      {/* Banner */}
+      <div className="banner">
+        <div className="bannerLeft">
+          <span className="bannerTitle">ROPOPUNKS TERMINAL</span>
+          <span className="bannerMeta">v1.987</span>
+        </div>
+        <div className="bannerRight">
+          <span className="bannerChip">LIVE</span>
+        </div>
+      </div>
+
       <div className="terminal">
         <div className="outWrap" ref={outRef}>
           {lines.map((l, i) => (
@@ -125,10 +181,18 @@ export default function App() {
             className="cmdInput"
             value={input}
             placeholder="type a command"
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => {
-              playClick();
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={(e) => {
+              // ensure audio is armed when typing
+              armAudio();
+
+              // click for most keys (optional – you can restrict if you want)
+              if (e.key.length === 1 || e.key === "Backspace") {
+                playClick();
+              }
+
               if (e.key === "Enter" && input.trim()) {
+                playClick();
                 runCommand(input);
                 setInput("");
               }
