@@ -185,7 +185,7 @@ export default function App() {
         style={{ fontSize: 92, letterSpacing: 12 }}
         filter="url(#arcadeGlowGreen)"
       >
-        ROBOPUNKS V2 
+        ROBOPUNKS 
       </text>
 
       {/* SUBTITLE */}
