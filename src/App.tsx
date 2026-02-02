@@ -8,6 +8,7 @@ export default function App() {
     "neural cores online... OK",
     "signal locked.",
     "type 'help' for available commands.",
+    "site nav: home | robot archives | about",
   ]);
 
   const [input, setInput] = useState("");
@@ -28,143 +29,132 @@ export default function App() {
     });
   }, [lines]);
 
-  const playClick = () => {
+  function click() {
     clickSound.current?.play().catch(() => {});
-  };
-
-  const playError = () => {
-    errorSound.current?.play().catch(() => {});
-  };
-
-  function runCommand(cmd: string) {
-    const c = cmd.toLowerCase().trim();
-
-    switch (c) {
-      case "help":
-        setLines(l => [
-          ...l,
-          "> help",
-          "COMMANDS",
-          "help",
-          "clear | cls",
-          "boot",
-          "whoami",
-          "arcade",
-          "matrix",
-          "mint",
-          "hack",
-          "NAV",
-          "home",
-          "robot-archives",
-          "about",
-        ]);
-        return;
-
-      case "clear":
-      case "cls":
-        setLines([]);
-        return;
-
-      case "boot":
-        setLines([
-          "rebooting system...",
-          "system initialised... OK",
-          "neural cores online... OK",
-          "signal locked.",
-        ]);
-        return;
-
-      case "whoami":
-        setLines(l => [...l, "> whoami", "identity: visitor"]);
-        return;
-
-      case "arcade":
-        setLines(l => [
-          ...l,
-          "> arcade",
-          "initialising arcade cabinet...",
-          "loading ROMs...",
-          "GALAXIAN.OK",
-          "OUTRUN.OK",
-          "ROBOTRON.OK",
-          "insert coin to continue.",
-        ]);
-        return;
-
-      case "matrix":
-        setLines(l => [
-          ...l,
-          "> matrix",
-          "entering simulation layer...",
-          "green code cascade engaged",
-          "there is no spoon.",
-        ]);
-        return;
-
-      case "mint":
-        setLines(l => [
-          ...l,
-          "> mint",
-          "initialising mint protocol...",
-          "verifying entropy...",
-          "generating unique artifact...",
-          "this action is permanent.",
-          "mint complete. provenance locked.",
-        ]);
-        return;
-
-      case "hack":
-        playError();
-        setLines(l => [
-          ...l,
-          "> hack",
-          "ACCESS DENIED",
-          "countermeasures active",
-          "incident logged",
-        ]);
-        return;
-
-      case "home":
-      case "robot-archives":
-      case "about":
-        setLines(l => [
-          ...l,
-          `> ${c}`,
-          `navigating to ${c}...`,
-        ]);
-        return;
-
-      default:
-        playError();
-        setLines(l => [
-          ...l,
-          `> ${cmd}`,
-          `command not recognised: ${cmd}`,
-          "type 'help' for available commands.",
-        ]);
-    }
   }
 
-  function lineClass(line: string) {
+  function error() {
+    errorSound.current?.play().catch(() => {});
+  }
+
+  function run(cmd: string) {
+    const c = cmd.toLowerCase().trim();
+
+    const push = (l: string[]) => setLines(prev => [...prev, ...l]);
+
+    if (c === "help") {
+      push([
+        "> help",
+        "COMMANDS",
+        "help",
+        "clear | cls",
+        "boot",
+        "whoami",
+        "arcade",
+        "matrix",
+        "mint",
+        "hack",
+        "SITE NAV",
+        "home",
+        "robot archives",
+        "about",
+      ]);
+      return;
+    }
+
+    if (c === "clear" || c === "cls") {
+      setLines([]);
+      return;
+    }
+
+    if (c === "boot") {
+      setLines([
+        "rebooting system...",
+        "system initialised... OK",
+        "neural cores online... OK",
+        "signal locked.",
+      ]);
+      return;
+    }
+
+    if (c === "whoami") {
+      push(["> whoami", "you are: visitor"]);
+      return;
+    }
+
+    if (c === "arcade") {
+      push([
+        "> arcade",
+        "loading arcade module...",
+        "insert coin",
+        "coin accepted",
+      ]);
+      return;
+    }
+
+    if (c === "matrix") {
+      push([
+        "> matrix",
+        "wake up, visitor.",
+        "the terminal has you.",
+      ]);
+      return;
+    }
+
+    if (c === "mint") {
+      push([
+        "> mint",
+        "initialising mint sequence...",
+        "verifying chain...",
+        "mint successful.",
+        "robot added to archives.",
+      ]);
+      return;
+    }
+
+    if (c === "hack") {
+      push([
+        "> hack",
+        "attempting breach...",
+        "ACCESS DENIED",
+        "nice try.",
+      ]);
+      return;
+    }
+
+    if (["home", "robot archives", "about"].includes(c)) {
+      push([`> ${cmd}`, `navigating to ${cmd}...`]);
+      return;
+    }
+
+    error();
+    push([
+      `> ${cmd}`,
+      `command not recognised: ${cmd}`,
+      "type 'help' for available commands.",
+    ]);
+  }
+
+  function cls(line: string) {
     const l = line.toLowerCase();
     if (l.startsWith(">")) return "cmd";
-    if (l.includes("denied") || l.includes("error")) return "err";
-    if (l === "commands" || l === "nav") return "hdr";
+    if (l.includes("not recognised") || l.includes("denied")) return "err";
+    if (l === "commands" || l === "site nav") return "hdr";
     if (l.includes("type 'help'")) return "hint";
     return "out";
   }
 
   return (
     <div className="crt">
-      <div className="terminal">
-        <div className="banner">
-          <div className="bannerText">ROBOPUNKS</div>
-          <div className="bannerSub">ROBOT COMMAND TERMINAL</div>
-        </div>
+      <div className="banner">
+        <div className="logo">ROBOPUNKS</div>
+        <div className="subtitle">RETRO ROBOT COMMAND TERMINAL</div>
+      </div>
 
+      <div className="terminal">
         <div className="outWrap" ref={outRef}>
           {lines.map((l, i) => (
-            <div key={i} className={`line ${lineClass(l)}`}>
+            <div key={i} className={`line ${cls(l)}`}>
               {l}
             </div>
           ))}
@@ -178,9 +168,9 @@ export default function App() {
             placeholder="type a command"
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => {
-              playClick();
+              click();
               if (e.key === "Enter" && input.trim()) {
-                runCommand(input);
+                run(input);
                 setInput("");
               }
             }}

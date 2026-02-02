@@ -1,86 +1,87 @@
+* {
+  box-sizing: border-box;
+  font-family: "Courier New", monospace;
+}
+
 body {
   margin: 0;
-  background: black;
-  font-family: "Courier New", monospace;
+  background: #000;
 }
 
 .crt {
   min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  padding: 20px;
-}
-
-.terminal {
-  width: 100%;
-  max-width: 900px;
-  border: 2px solid #00ffe0;
-  border-radius: 16px;
-  box-shadow: 0 0 30px rgba(0,255,200,0.4);
-  background: #000;
-  display: flex;
-  flex-direction: column;
+  background: radial-gradient(#001b12, #000);
+  padding: 16px;
 }
 
 .banner {
   text-align: center;
-  padding: 16px 10px;
-  border-bottom: 2px solid #00ffe0;
+  margin-bottom: 12px;
 }
 
-.bannerText {
-  font-size: 42px;
+.logo {
+  font-size: clamp(28px, 8vw, 56px);
+  color: #4cff00;
+  text-shadow:
+    0 0 6px #4cff00,
+    0 0 14px #00ff88;
   letter-spacing: 4px;
-  color: #00eaff;
-  text-shadow: 0 0 12px #00eaff;
 }
 
-.bannerSub {
-  font-size: 14px;
-  color: #00eaff;
-  opacity: 0.85;
+.subtitle {
+  color: #00e5ff;
+  text-shadow: 0 0 6px #00e5ff;
+  font-size: 12px;
+}
+
+.terminal {
+  border: 1px solid #00ff88;
+  border-radius: 8px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.85);
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .outWrap {
-  flex: 1;
+  max-height: 60vh;
   overflow-y: auto;
-  padding: 16px;
+  padding-right: 6px;
 }
 
 .line {
-  line-height: 1.4;
   white-space: pre-wrap;
+  line-height: 1.4;
 }
 
 .out {
-  color: #63ff63;
+  color: #4cff00;
 }
 
 .cmd {
-  color: #6ec1ff;
-}
-
-.err {
-  color: #ff4d4d;
+  color: #00cfff;
 }
 
 .hdr {
-  color: #ff66ff;
-  margin-top: 10px;
+  color: #ff3df5;
+  margin-top: 8px;
 }
 
 .hint {
-  color: #7aa2ff;
+  color: #aaa;
+}
+
+.err {
+  color: #ff4040;
 }
 
 .inputRow {
   display: flex;
-  padding: 12px;
-  border-top: 1px solid #00ffe0;
+  margin-top: 10px;
 }
 
 .prompt {
-  color: #6ec1ff;
+  color: #00cfff;
   margin-right: 6px;
 }
 
@@ -89,23 +90,10 @@ body {
   background: transparent;
   border: none;
   outline: none;
-  color: #6ec1ff;
-  font-family: inherit;
+  color: #00cfff;
   font-size: 16px;
 }
 
-/* MOBILE FIX */
-@media (max-width: 768px) {
-  .bannerText {
-    font-size: 28px;
-    letter-spacing: 2px;
-  }
-
-  .bannerSub {
-    font-size: 12px;
-  }
-
-  .terminal {
-    border-radius: 10px;
-  }
+.cmdInput::placeholder {
+  color: #555;
 }
