@@ -15,8 +15,64 @@ body {
 }
 
 .banner {
-  text-align: center;
+  display: flex;
+  justify-content: center;
   margin-bottom: 12px;
+}
+
+.bannerInner {
+  width: min(980px, 100%);
+  padding: 10px 12px 6px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+  border-radius: 14px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 255, 180, 0.05),
+    rgba(0, 0, 0, 0.75)
+  );
+  box-shadow:
+    0 0 0 1px rgba(0, 229, 255, 0.12) inset,
+    0 0 24px rgba(0, 229, 255, 0.18);
+}
+
+.pixelLogo {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pixelText {
+  fill: #4cff00;
+  font-size: 120px;
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  /* blocky arcade font effect */
+  font-family: "Impact", "Arial Black", system-ui, sans-serif;
+  paint-order: stroke;
+  stroke: rgba(0, 255, 200, 0.35);
+  stroke-width: 10px;
+}
+
+.pixelSub {
+  fill: #00e5ff;
+  font-size: 22px;
+  letter-spacing: 5px;
+  font-family: "Courier New", monospace;
+  opacity: 0.95;
+  text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+}
+
+/* Mobile tweak so it doesn’t look “off” */
+@media (max-width: 520px) {
+  .pixelText {
+    font-size: 96px;
+    letter-spacing: 6px;
+    stroke-width: 8px;
+  }
+  .pixelSub {
+    font-size: 18px;
+    letter-spacing: 3px;
+  }
 }
 
 .logo {
