@@ -1,182 +1,111 @@
-:root {
-  --bg: #040807;
-  --panel: rgba(0, 0, 0, 0.75);
-  --green: #7cff7c;
-  --greenDim: rgba(124, 255, 124, 0.65);
-  --pink: #ff4fd8;
-  --err: #ff5b5b;
-
-  --cmdBlue: #7bb6ff;
-  --cmdBlueDim: rgba(123, 182, 255, 0.6);
-
-  --line: rgba(124, 255, 124, 0.25);
-}
-
-html, body {
-  height: 100%;
+body {
   margin: 0;
-  background: var(--bg);
+  background: black;
+  font-family: "Courier New", monospace;
 }
 
 .crt {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  background: radial-gradient(ellipse at center, rgba(124,255,124,0.06), transparent 60%);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  justify-content: center;
+  padding: 20px;
 }
 
-/* Banner */
-.banner {
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  background: var(--panel);
-  backdrop-filter: blur(6px);
-  border-bottom: 1px solid var(--line);
-  padding: 10px 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.bannerLeft {
-  display: flex;
-  gap: 8px;
-  align-items: baseline;
-  min-width: 0;
-}
-
-.bannerTitle {
-  color: var(--green);
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  font-size: 12px;
-  white-space: nowrap;
-}
-
-.bannerMeta {
-  color: rgba(255,255,255,0.55);
-  font-size: 11px;
-  white-space: nowrap;
-}
-
-.bannerRight {
-  display: flex;
-  align-items: center;
-}
-
-.bannerChip {
-  border: 1px solid var(--line);
-  color: var(--greenDim);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  white-space: nowrap;
-}
-
-/* Terminal shell */
 .terminal {
-  flex: 1;
+  width: 100%;
+  max-width: 900px;
+  border: 2px solid #00ffe0;
+  border-radius: 16px;
+  box-shadow: 0 0 30px rgba(0,255,200,0.4);
+  background: #000;
   display: flex;
   flex-direction: column;
-  margin: 16px;
-  border-radius: 14px;
-  border: 1px solid var(--line);
-  background: rgba(0, 0, 0, 0.65);
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.45);
-  overflow: hidden;
 }
 
-/* Output */
+.banner {
+  text-align: center;
+  padding: 16px 10px;
+  border-bottom: 2px solid #00ffe0;
+}
+
+.bannerText {
+  font-size: 42px;
+  letter-spacing: 4px;
+  color: #00eaff;
+  text-shadow: 0 0 12px #00eaff;
+}
+
+.bannerSub {
+  font-size: 14px;
+  color: #00eaff;
+  opacity: 0.85;
+}
+
 .outWrap {
   flex: 1;
-  overflow: auto;
-  padding: 18px 16px 10px;
+  overflow-y: auto;
+  padding: 16px;
 }
 
 .line {
+  line-height: 1.4;
   white-space: pre-wrap;
-  line-height: 1.35;
-  font-size: 14px;
-  margin-bottom: 6px;
-  color: rgba(255,255,255,0.78);
 }
 
-.line.out { color: rgba(255,255,255,0.78); }
-
-.line.cmd {
-  color: var(--cmdBlue);
-  text-shadow: 0 0 8px rgba(123,182,255,0.25);
+.out {
+  color: #63ff63;
 }
 
-.line.hdr {
-  color: var(--pink);
-  font-weight: 800;
-  letter-spacing: 0.08em;
+.cmd {
+  color: #6ec1ff;
 }
 
-.line.hint { color: var(--cmdBlueDim); }
-
-.line.ok {
-  color: var(--green);
-  text-shadow: 0 0 10px rgba(124,255,124,0.2);
+.err {
+  color: #ff4d4d;
 }
 
-.line.err {
-  color: var(--err);
+.hdr {
+  color: #ff66ff;
+  margin-top: 10px;
 }
 
-/* Input row */
+.hint {
+  color: #7aa2ff;
+}
+
 .inputRow {
-  border-top: 1px solid var(--line);
-  padding: 12px 12px;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(0,0,0,0.75);
+  padding: 12px;
+  border-top: 1px solid #00ffe0;
 }
 
 .prompt {
-  color: var(--green);
-  font-weight: 800;
+  color: #6ec1ff;
+  margin-right: 6px;
 }
 
 .cmdInput {
-  width: 100%;
+  flex: 1;
   background: transparent;
   border: none;
   outline: none;
-  color: rgba(255,255,255,0.9);
-  font-size: 14px;
-  padding: 6px 0;
+  color: #6ec1ff;
+  font-family: inherit;
+  font-size: 16px;
 }
 
-.cmdInput::placeholder {
-  color: rgba(255,255,255,0.35);
-}
+/* MOBILE FIX */
+@media (max-width: 768px) {
+  .bannerText {
+    font-size: 28px;
+    letter-spacing: 2px;
+  }
 
-/* Mobile tweaks */
-@media (max-width: 520px) {
+  .bannerSub {
+    font-size: 12px;
+  }
+
   .terminal {
-    margin: 10px;
-    border-radius: 12px;
-  }
-
-  .outWrap {
-    padding: 14px 12px 8px;
-  }
-
-  .line {
-    font-size: 13px;
-  }
-
-  .banner {
-    padding: 10px 12px;
-  }
-
-  .bannerTitle {
-    font-size: 11px;
+    border-radius: 10px;
   }
 }
