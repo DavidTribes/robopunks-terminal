@@ -177,9 +177,9 @@ export default function App() {
 
       {/* BIG ARCADE TITLE */}
       <text
-        x="50%"
+        x="5%"
         y="58%"
-        textAnchor="middle"
+        textAnchor="start"
         dominantBaseline="middle"
         className="pixelTitle"
         style={{ fontSize: 92, letterSpacing: 12 }}
