@@ -188,18 +188,6 @@ export default function App() {
         ROBOPUNKS V2 
       </text>
 
-      {/* TOP RIGHT LABEL */}
-      <text
-        x="1180"
-        y="40"
-        textAnchor="end"
-        className="pixelText"
-        style={{ fontSize: 18, letterSpacing: 4 }}
-        filter="url(#arcadeGlow)"
-      >
-        RETRO ROBOT COMMAND TERMINAL
-      </text>
-
       {/* SUBTITLE */}
       <text
         x="50%"
@@ -210,7 +198,7 @@ export default function App() {
         style={{ fontSize: 18, letterSpacing: 6 }}
         filter="url(#arcadeGlow)"
       >
-        ROBOPUNKS ROBOT COMMAND TERMINAL v1.987
+        ROBOPUNKS ROBOT COMMAND TERMINAL
       </text>
     </svg>
   </div>
