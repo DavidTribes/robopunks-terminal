@@ -1,41 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import "./App.css";
 
 export default function App() {
-  // ASCII banner (matches the style in your screenshot)
-  const banner = String.raw`
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ ██████╗  ██████╗ ██████╗  ██████╗ ██████╗ ██╗   ██╗███╗   ██╗██╗  ██╗███████╗ │
-│ ██╔══██╗██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██║   ██║████╗  ██║██║ ██╔╝██╔════╝ │
-│ ██████╔╝██║   ██║██████╔╝██║   ██║██████╔╝██║   ██║██╔██╗ ██║█████╔╝ ███████╗ │
-│ ██╔══██╗██║   ██║██╔══██╗██║   ██║██╔═══╝ ██║   ██║██║╚██╗██║██╔═██╗ ╚════██║ │
-│ ██║  ██║╚██████╔╝██████╔╝╚██████╔╝██║     ╚██████╔╝██║ ╚████║██║  ██╗███████║ │
-│ ╚═╝  ╚═╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝ │
-└──────────────────────────────────────────────────────────────────────────────┘
-RETRO ROBOT COMMAND TERMINAL v1.987
-`;
+  const bootLines = useMemo(
+    () => [
+      "retro robot command terminal v1.987",
+      "system initialised... OK",
+      "loading robot database... OK",
+      "connecting to mainframe... OK",
+      "type 'help' for available commands.",
+    ],
+    []
+  );
 
-  const [lines, setLines] = useState<string[]>([
-    "System initialised... OK",
-    "Loading robot database... OK",
-    "Connecting to mainframe... OK",
-    "Type 'help' for available commands or 'about' for system info.",
-  ]);
-
+  const [lines, setLines] = useState<string[]>(bootLines);
   const [input, setInput] = useState("");
   const outRef = useRef<HTMLDivElement>(null);
 
-  // iPhone-safe sounds (GitHub Pages needs BASE_URL)
+  // --- iOS/Wix-safe sound ---
+  const isArmed = useRef(false);
   const clickSound = useRef<HTMLAudioElement | null>(null);
   const errorSound = useRef<HTMLAudioElement | null>(null);
-  const audioArmed = useRef(false);
 
   useEffect(() => {
-    const base = import.meta.env.BASE_URL; // "/robopunks-terminal/" on Pages
-    clickSound.current = new Audio(`${base}click.mp3`);
-    errorSound.current = new Audio(`${base}error.mp3`);
-    clickSound.current.load();
-    errorSound.current.load();
+    clickSound.current = new Audio("/click.mp3");
+    errorSound.current = new Audio("/error.mp3");
+    if (clickSound.current) clickSound.current.volume = 0.4;
+    if (errorSound.current) errorSound.current.volume = 0.55;
   }, []);
 
   useEffect(() => {
@@ -45,75 +36,94 @@ RETRO ROBOT COMMAND TERMINAL v1.987
     });
   }, [lines]);
 
-  function armAudioOnce() {
-    if (audioArmed.current) return;
-    audioArmed.current = true;
+  function armAudio() {
+    if (isArmed.current) return;
+    isArmed.current = true;
 
-    // Prime audio on first user gesture (iOS)
     const a = clickSound.current;
     if (!a) return;
 
-    try {
-      a.volume = 0;
-      a.currentTime = 0;
-      a.play()
-        .then(() => {
-          a.pause();
-          a.currentTime = 0;
-          a.volume = 1;
-        })
-        .catch(() => {
-          a.volume = 1;
-        });
-    } catch {
-      // ignore
-    }
+    const oldVol = a.volume;
+    a.volume = 0.01;
+    a.currentTime = 0;
+
+    a.play()
+      .then(() => {
+        a.pause();
+        a.currentTime = 0;
+        a.volume = oldVol;
+      })
+      .catch(() => {
+        a.volume = oldVol;
+      });
   }
 
   function playClick() {
-    armAudioOnce();
     const a = clickSound.current;
     if (!a) return;
-    try {
-      a.currentTime = 0;
-      a.play().catch(() => {});
-    } catch {
-      // ignore
-    }
+    const clone = a.cloneNode(true) as HTMLAudioElement;
+    clone.volume = a.volume;
+    clone.currentTime = 0;
+    clone.play().catch(() => {});
   }
 
   function playError() {
-    armAudioOnce();
     const a = errorSound.current;
     if (!a) return;
-    try {
-      a.currentTime = 0;
-      a.play().catch(() => {});
-    } catch {
-      // ignore
-    }
+    const clone = a.cloneNode(true) as HTMLAudioElement;
+    clone.volume = a.volume;
+    clone.currentTime = 0;
+    clone.play().catch(() => {});
+  }
+
+  function pushCmd(cmd: string) {
+    setLines((l) => [...l, `> ${cmd}`]);
+  }
+
+  function pushOut(...out: string[]) {
+    setLines((l) => [...l, ...out]);
+  }
+
+  function longMintStory() {
+    // A long-ish fun response with multiple lines (no async needed)
+    return [
+      "MINT PROTOCOL INITIATED...",
+      "checking vault seals... OK",
+      "warming synth-press... OK",
+      "calculating rarity matrix... OK",
+      "etching serial: RP-" + String(Math.floor(1000 + Math.random() * 9000)),
+      "forging chrome badge... OK",
+      "aligning pixel rails... OK",
+      "mint complete.",
+      "tip: try 'arcade' or 'matrix' for more signal.",
+    ];
   }
 
   function runCommand(cmd: string) {
     const raw = cmd.trim();
     const c = raw.toLowerCase();
 
+    // Always show what they typed in BLUE
+    pushCmd(raw);
+
     if (!raw) return;
 
     if (c === "help") {
-      setLines((l) => [
-        ...l,
-        "> help",
+      pushOut(
         "COMMANDS",
         "help",
         "clear | cls",
         "boot",
         "whoami",
-        "about",
+        "arcade",
+        "matrix",
+        "mint",
+        "hack",
         "SITE NAV",
         "home",
-        "archives",
-      ]);
+        "robot-archives",
+        "about"
+      );
       return;
     }
 
@@ -123,62 +133,100 @@ RETRO ROBOT COMMAND TERMINAL v1.987
     }
 
     if (c === "boot") {
+      playClick();
       setLines([
-        "System initialised... OK",
-        "Loading robot database... OK",
-        "Connecting to mainframe... OK",
-        "Type 'help' for available commands or 'about' for system info.",
+        "rebooting system...",
+        "system initialised... OK",
+        "neural cores online... OK",
+        "signal locked.",
+        "type 'help' for available commands.",
       ]);
       return;
     }
 
     if (c === "whoami") {
-      setLines((l) => [...l, "> whoami", "you are: visitor"]);
+      pushOut("you are: visitor");
       return;
     }
 
-    if (c === "about") {
-      setLines((l) => [
-        ...l,
-        "> about",
-        "ROPOPUNKS TERMINAL v1.987",
-        "Status: ONLINE",
-        "Signal: LOCKED",
-      ]);
+    if (c === "arcade") {
+      pushOut(
+        "ARCADE MODE: ONLINE",
+        "insert coin: ░░▒▒▓▓▓█",
+        "controls: [WASD]  [SPACE]",
+        "high score: 1987",
+        "status: READY"
+      );
       return;
     }
 
-    if (["home", "archives"].includes(c)) {
-      setLines((l) => [...l, `> ${c}`, `navigating to ${c}...`]);
+    if (c === "matrix") {
+      pushOut(
+        "MATRIX FEED: ENGAGED",
+        "01101000 01100101 01101100 01110000",
+        "green rain stabilised... OK",
+        "warning: reality distortion minor",
+        "type 'help' to exit confusion."
+      );
       return;
     }
 
+    if (c === "mint") {
+      pushOut(...longMintStory());
+      return;
+    }
+
+    if (c === "hack") {
+      pushOut(
+        "HACK SEQUENCE STARTED...",
+        "breaching firewall... DENIED",
+        "deploying charm offensive... OK",
+        "negotiating with security daemon... OK",
+        "result: ACCESS GRANTED (read-only)",
+        "tip: try 'robot-archives' for artefacts."
+      );
+      return;
+    }
+
+    if (["home", "about", "robot-archives"].includes(c)) {
+      pushOut(`navigating to ${c}...`);
+      return;
+    }
+
+    // error
     playError();
-    setLines((l) => [
-      ...l,
-      `> ${raw}`,
+    pushOut(
       `command not recognised: ${raw}`,
-      "Type 'help' for available commands or 'about' for system info.",
-    ]);
+      "type 'help' for available commands."
+    );
   }
 
   function lineClass(line: string) {
-    const lower = line.toLowerCase();
-    if (lower.startsWith("> ")) return "cmd";
-    if (lower.includes("not recognised")) return "err";
-    if (lower === "commands" || lower === "site nav") return "hdr";
-    if (lower.startsWith("type 'help'")) return "hint"; // BLUE line
-    if (lower.includes("... ok")) return "ok"; // GREEN ok line
+    const l = line.toLowerCase();
+
+    if (l.startsWith("> ")) return "cmd"; // BLUE typed commands
+    if (l.includes("not recognised") || l.includes("denied")) return "err";
+    if (l === "commands" || l === "site nav") return "hdr";
+    if (l.includes("type 'help'")) return "hint";
+    if (l.includes("ok")) return "ok";
+
     return "out";
   }
 
   return (
-    <div className="crt">
-      <div className="terminal">
-        <div className="bannerWrap">
-          <pre className="banner">{banner}</pre>
+    <div className="crt" onPointerDown={armAudio} onKeyDownCapture={armAudio}>
+      {/* Mobile-friendly banner */}
+      <div className="banner">
+        <div className="bannerLeft">
+          <span className="bannerTitle">ROBO•PUNKS</span>
+          <span className="bannerMeta">terminal</span>
         </div>
+        <div className="bannerRight">
+          <span className="bannerChip">v1.987</span>
+        </div>
+      </div>
 
+      <div className="terminal">
         <div className="outWrap" ref={outRef}>
           {lines.map((l, i) => (
             <div key={i} className={`line ${lineClass(l)}`}>
@@ -195,16 +243,16 @@ RETRO ROBOT COMMAND TERMINAL v1.987
             placeholder="type a command"
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
-              // user gesture = arm audio
-              if (!audioArmed.current) armAudioOnce();
+              armAudio();
 
-              // click on each keypress feels best
-              if (e.key.length === 1 || e.key === "Backspace") playClick();
+              if (e.key.length === 1 || e.key === "Backspace") {
+                playClick();
+              }
 
               if (e.key === "Enter") {
-                playClick();
-                runCommand(input);
+                const toRun = input;
                 setInput("");
+                if (toRun.trim()) runCommand(toRun);
               }
             }}
           />

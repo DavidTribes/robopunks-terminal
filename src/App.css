@@ -1,170 +1,182 @@
-/* Base */
 :root {
-  --bg: #07110f;
-  --panel: rgba(0, 0, 0, 0.65);
-  --cyan: #37e6f3;
-  --cyan-dim: rgba(55, 230, 243, 0.35);
-  --green: #7dff7a;
-  --green-dim: rgba(125, 255, 122, 0.35);
-  --blue: #6fb7ff;
-  --red: #ff5c5c;
-  --text: #d6f7ff;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-    "Courier New", monospace;
+  --bg: #040807;
+  --panel: rgba(0, 0, 0, 0.75);
+  --green: #7cff7c;
+  --greenDim: rgba(124, 255, 124, 0.65);
+  --pink: #ff4fd8;
+  --err: #ff5b5b;
+
+  --cmdBlue: #7bb6ff;
+  --cmdBlueDim: rgba(123, 182, 255, 0.6);
+
+  --line: rgba(124, 255, 124, 0.25);
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html,
-body {
+html, body {
   height: 100%;
   margin: 0;
-  background: radial-gradient(1200px 800px at 50% 10%, #0e2a24 0%, #050807 60%, #000 100%);
-  color: var(--text);
-  font-family: var(--mono);
+  background: var(--bg);
 }
 
-/* CRT container */
 .crt {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at center, rgba(124,255,124,0.06), transparent 60%);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
-/* Terminal frame */
-.terminal {
-  width: min(980px, 94vw);
-  background: var(--panel);
-  border: 2px solid var(--cyan-dim);
-  border-radius: 14px;
-  padding: 18px;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.35) inset, 0 0 40px rgba(55, 230, 243, 0.12);
-}
-
-/* Banner block */
-.bannerWrap {
-  border: 2px solid var(--cyan);
-  border-radius: 12px;
-  padding: 16px 16px 10px;
-  margin-bottom: 14px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5) inset, 0 0 24px rgba(55, 230, 243, 0.16);
-}
-
+/* Banner */
 .banner {
-  margin: 0;
-  color: var(--cyan);
-  font-size: 14px;
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-  white-space: pre;
-  text-shadow: 0 0 8px rgba(55, 230, 243, 0.28);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--panel);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-/* Output panel */
-.outWrap {
-  height: 320px;
-  overflow: auto;
-  padding: 8px 10px;
-  border: 1px solid rgba(125, 255, 122, 0.22);
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.35);
+.bannerLeft {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  min-width: 0;
 }
 
-/* Scrollbar (don’t hide it) */
-.outWrap::-webkit-scrollbar {
-  width: 10px;
-}
-.outWrap::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 10px;
-}
-.outWrap::-webkit-scrollbar-thumb {
-  background: rgba(55, 230, 243, 0.35);
-  border-radius: 10px;
-}
-.outWrap::-webkit-scrollbar-thumb:hover {
-  background: rgba(55, 230, 243, 0.55);
-}
-
-/* Lines */
-.line {
-  font-size: 16px;
-  line-height: 1.6;
-  text-shadow: 0 0 10px rgba(125, 255, 122, 0.08);
-}
-
-.out {
-  color: var(--text);
-}
-
-.ok {
+.bannerTitle {
   color: var(--green);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  font-size: 12px;
+  white-space: nowrap;
 }
 
-.cmd {
-  color: var(--cyan);
+.bannerMeta {
+  color: rgba(255,255,255,0.55);
+  font-size: 11px;
+  white-space: nowrap;
 }
 
-.hdr {
-  margin-top: 10px;
-  color: var(--cyan);
-  font-weight: 700;
-  letter-spacing: 1px;
+.bannerRight {
+  display: flex;
+  align-items: center;
 }
 
-.hint {
-  color: var(--blue);
-  text-shadow: 0 0 10px rgba(111, 183, 255, 0.2);
+.bannerChip {
+  border: 1px solid var(--line);
+  color: var(--greenDim);
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-.err {
-  color: var(--red);
-  text-shadow: 0 0 10px rgba(255, 92, 92, 0.14);
+/* Terminal shell */
+.terminal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.5), 0 20px 60px rgba(0,0,0,0.45);
+  overflow: hidden;
+}
+
+/* Output */
+.outWrap {
+  flex: 1;
+  overflow: auto;
+  padding: 18px 16px 10px;
+}
+
+.line {
+  white-space: pre-wrap;
+  line-height: 1.35;
+  font-size: 14px;
+  margin-bottom: 6px;
+  color: rgba(255,255,255,0.78);
+}
+
+.line.out { color: rgba(255,255,255,0.78); }
+
+.line.cmd {
+  color: var(--cmdBlue);
+  text-shadow: 0 0 8px rgba(123,182,255,0.25);
+}
+
+.line.hdr {
+  color: var(--pink);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.line.hint { color: var(--cmdBlueDim); }
+
+.line.ok {
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(124,255,124,0.2);
+}
+
+.line.err {
+  color: var(--err);
 }
 
 /* Input row */
 .inputRow {
+  border-top: 1px solid var(--line);
+  padding: 12px 12px;
   display: flex;
-  gap: 10px;
   align-items: center;
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(55, 230, 243, 0.18);
+  gap: 10px;
+  background: rgba(0,0,0,0.75);
 }
 
 .prompt {
   color: var(--green);
-  font-size: 18px;
-  user-select: none;
+  font-weight: 800;
 }
 
 .cmdInput {
-  flex: 1;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(55, 230, 243, 0.25);
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: var(--text);
-  font-family: var(--mono);
-  font-size: 16px;
+  width: 100%;
+  background: transparent;
+  border: none;
   outline: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 14px;
+  padding: 6px 0;
 }
 
-.cmdInput:focus {
-  border-color: rgba(55, 230, 243, 0.55);
-  box-shadow: 0 0 0 2px rgba(55, 230, 243, 0.14);
+.cmdInput::placeholder {
+  color: rgba(255,255,255,0.35);
 }
 
-/* Small screens: keep banner readable */
-@media (max-width: 560px) {
-  .banner {
-    font-size: 10px;
-    line-height: 1.05;
+/* Mobile tweaks */
+@media (max-width: 520px) {
+  .terminal {
+    margin: 10px;
+    border-radius: 12px;
   }
+
   .outWrap {
-    height: 280px;
+    padding: 14px 12px 8px;
+  }
+
+  .line {
+    font-size: 13px;
+  }
+
+  .banner {
+    padding: 10px 12px;
+  }
+
+  .bannerTitle {
+    font-size: 11px;
   }
 }
