@@ -88,6 +88,7 @@ export default function App() {
         "loading arcade module...",
         "insert coin",
         "coin accepted",
+        "🕹️GAME OVER🕹️",
       ]);
       return;
     }
@@ -147,9 +148,73 @@ export default function App() {
   return (
     <div className="crt">
       <div className="banner">
-        <div className="logo">ROBOPUNKS</div>
-        <div className="subtitle">RETRO ROBOT COMMAND TERMINAL</div>
-      </div>
+  <div className="bannerInner">
+    <svg
+      className="pixelLogo"
+      viewBox="0 0 1200 220"
+      role="img"
+      aria-label="ROBOPUNKS ROBOT COMMAND TERMINAL"
+    >
+      <defs>
+        {/* cyan glow */}
+        <filter id="arcadeGlow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3.5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        {/* green glow */}
+        <filter id="arcadeGlowGreen" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
+
+      {/* BIG ARCADE TITLE */}
+      <text
+        x="50%"
+        y="58%"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="pixelTitle"
+        style={{ fontSize: 92, letterSpacing: 12 }}
+        filter="url(#arcadeGlowGreen)"
+      >
+        ROBOPUNKS
+      </text>
+
+      {/* TOP RIGHT LABEL */}
+      <text
+        x="1180"
+        y="40"
+        textAnchor="end"
+        className="pixelText"
+        style={{ fontSize: 18, letterSpacing: 4 }}
+        filter="url(#arcadeGlow)"
+      >
+        RETRO ROBOT COMMAND TERMINAL
+      </text>
+
+      {/* SUBTITLE */}
+      <text
+        x="50%"
+        y="88%"
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="pixelText"
+        style={{ fontSize: 18, letterSpacing: 6 }}
+        filter="url(#arcadeGlow)"
+      >
+        ROBOPUNKS ROBOT COMMAND TERMINAL v1.987
+      </text>
+    </svg>
+  </div>
+</div>
 
       <div className="terminal">
         <div className="outWrap" ref={outRef}>

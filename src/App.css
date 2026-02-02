@@ -1,155 +1,163 @@
-* {
-  box-sizing: border-box;
-  font-family: "Courier New", monospace;
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+/* ===========================
+   GLOBAL / CRT BASE
+=========================== */
+
+:root{
+  --bg: #000;
+  --green: #7dff6a;
+  --cyan: #7df7ff;
+  --magenta: #ff2bd6;
+  --red: #ff4a4a;
+  --blueCmd: #49a6ff;
 }
 
-body {
+html, body, #root{
+  height: 100%;
   margin: 0;
-  background: #000;
+  background: var(--bg);
 }
 
-.crt {
-  min-height: 100vh;
-  background: radial-gradient(#001b12, #000);
-  padding: 16px;
+.crt{
+  min-height: 100%;
+  padding: 0;
+  background: radial-gradient(ellipse at center, rgba(0,255,180,0.06), rgba(0,0,0,0.95) 70%);
 }
 
-.banner {
+/* ===========================
+   ARCADE BANNER (DESKTOP-FIRST)
+=========================== */
+
+.banner{
+  position: relative;
+  padding: 18px 16px 14px;
+  border-bottom: 3px solid var(--magenta);
+  background: radial-gradient(ellipse at center, rgba(0,255,180,0.08), rgba(0,0,0,0.95) 70%);
+}
+
+.bannerInner{
+  max-width: 1100px;
+  margin: 0 auto;
   display: flex;
+  align-items: center;
   justify-content: center;
-  margin-bottom: 12px;
 }
 
-.bannerInner {
-  width: min(980px, 100%);
-  padding: 10px 12px 6px;
-  border: 1px solid rgba(0, 229, 255, 0.35);
-  border-radius: 14px;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 255, 180, 0.05),
-    rgba(0, 0, 0, 0.75)
-  );
-  box-shadow:
-    0 0 0 1px rgba(0, 229, 255, 0.12) inset,
-    0 0 24px rgba(0, 229, 255, 0.18);
-}
-
-.pixelLogo {
+/* SVG sizing */
+.pixelLogo{
   width: 100%;
+  max-width: 860px;
   height: auto;
   display: block;
 }
 
-.pixelText {
-  fill: #4cff00;
-  font-size: 120px;
-  letter-spacing: 10px;
-  text-transform: uppercase;
-  /* blocky arcade font effect */
-  font-family: "Impact", "Arial Black", system-ui, sans-serif;
-  paint-order: stroke;
-  stroke: rgba(0, 255, 200, 0.35);
-  stroke-width: 10px;
+/* Make the SVG text look “arcade neon” */
+.pixelText{
+  font-family: "Press Start 2P", monospace;
+  letter-spacing: 8px;
+  fill: var(--cyan);
+  filter: url(#arcadeGlow);
 }
 
-.pixelSub {
-  fill: #00e5ff;
-  font-size: 22px;
-  letter-spacing: 5px;
-  font-family: "Courier New", monospace;
-  opacity: 0.95;
-  text-shadow: 0 0 8px rgba(0, 229, 255, 0.7);
+.pixelTitle{
+  font-family: "Press Start 2P", monospace;
+  fill: var(--green);
+  filter: url(#arcadeGlowGreen);
 }
 
-/* Mobile tweak so it doesn’t look “off” */
-@media (max-width: 520px) {
-  .pixelText {
-    font-size: 96px;
-    letter-spacing: 6px;
-    stroke-width: 8px;
-  }
-  .pixelSub {
-    font-size: 18px;
-    letter-spacing: 3px;
-  }
+/* ===========================
+   TERMINAL BOX
+=========================== */
+
+.terminal{
+  max-width: 1100px;
+  margin: 28px auto 0;
+  padding: 0 16px 28px;
 }
 
-.logo {
-  font-size: clamp(28px, 8vw, 56px);
-  color: #4cff00;
-  text-shadow:
-    0 0 6px #4cff00,
-    0 0 14px #00ff88;
-  letter-spacing: 4px;
+.outWrap{
+  border: 2px solid rgba(125,255,106,0.55);
+  border-radius: 10px;
+  padding: 18px 18px 12px;
+  background: rgba(0,0,0,0.55);
+  box-shadow: 0 0 24px rgba(125,255,106,0.12);
+  height: 360px;
+  overflow-y: auto; /* <-- scrollbar back */
 }
 
-.subtitle {
-  color: #00e5ff;
-  text-shadow: 0 0 6px #00e5ff;
-  font-size: 12px;
-}
-
-.terminal {
-  border: 1px solid #00ff88;
-  border-radius: 8px;
-  padding: 12px;
-  background: rgba(0, 0, 0, 0.85);
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.outWrap {
-  max-height: 60vh;
-  overflow-y: auto;
-  padding-right: 6px;
-}
-
-.line {
+.line{
+  font-family: "Press Start 2P", monospace;
+  font-size: 14px;
+  line-height: 1.9;
+  letter-spacing: 1px;
+  color: var(--green);
+  text-shadow: 0 0 10px rgba(125,255,106,0.14);
   white-space: pre-wrap;
-  line-height: 1.4;
 }
 
-.out {
-  color: #4cff00;
+.line.out{ color: var(--green); }
+.line.hint{ color: rgba(200,255,200,0.85); }
+.line.hdr{
+  color: var(--magenta);
+  text-shadow: 0 0 12px rgba(255,43,214,0.25);
+}
+.line.err{
+  color: var(--red);
+  text-shadow: 0 0 12px rgba(255,74,74,0.22);
+}
+.line.cmd{
+  color: var(--blueCmd); /* <-- command line is BLUE */
+  text-shadow: 0 0 12px rgba(73,166,255,0.22);
 }
 
-.cmd {
-  color: #00cfff;
-}
-
-.hdr {
-  color: #ff3df5;
-  margin-top: 8px;
-}
-
-.hint {
-  color: #aaa;
-}
-
-.err {
-  color: #ff4040;
-}
-
-.inputRow {
+.inputRow{
   display: flex;
+  align-items: center;
+  gap: 10px;
   margin-top: 10px;
 }
 
-.prompt {
-  color: #00cfff;
-  margin-right: 6px;
+.prompt{
+  font-family: "Press Start 2P", monospace;
+  color: var(--blueCmd);
 }
 
-.cmdInput {
+.cmdInput{
   flex: 1;
+  font-family: "Press Start 2P", monospace;
+  font-size: 14px;
+  color: rgba(200,255,255,0.9);
   background: transparent;
   border: none;
   outline: none;
-  color: #00cfff;
-  font-size: 16px;
 }
 
-.cmdInput::placeholder {
-  color: #555;
+/* ===========================
+   MOBILE TUNING (ONLY OVERRIDES)
+=========================== */
+
+@media (max-width: 640px){
+  .banner{
+    padding: 16px 12px 12px;
+  }
+  .pixelLogo{
+    max-width: 520px;
+  }
+  .terminal{
+    margin-top: 16px;
+    padding: 0 12px 22px;
+  }
+  .outWrap{
+    height: 420px;
+    padding: 14px 14px 10px;
+  }
+  .line{
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    line-height: 1.85;
+  }
+  .cmdInput{
+    font-size: 12px;
+  }
 }
